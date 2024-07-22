@@ -4,3 +4,6 @@
 [submodule "Explicit-FRI"]
 	path = Explicit-FRI
 	url = https://github.com/explicit-robotics/Explicit-FRI.git
+[submodule "KinematicModules"]
+	path = KinematicModules
+	url = https://github.com/mosesnah-shared/KinematicModules.git
