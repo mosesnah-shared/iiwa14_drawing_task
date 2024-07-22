@@ -7,3 +7,6 @@
 [submodule "KinematicModules"]
 	path = KinematicModules
 	url = https://github.com/mosesnah-shared/KinematicModules.git
+[submodule "GeometryLibrary"]
+	path = GeometryLibrary
+	url = https://github.com/mosesnah-shared/GeometryLibrary.git
