@@ -18,7 +18,7 @@ Nt    = length( t_arr );
 N = size( mov.weight, 2 );
 
 time_scl = 1.0;
-toffset = 1.0;
+toffset = 0.0;
 
 % The Canonical System and Nonlinear Forcing Term 
 cs = CanonicalSystem( 'discrete', mov.tau * time_scl, mov.alpha_s );
@@ -134,4 +134,4 @@ anim.close( )
 
 %% Save Data
 
-csvwrite( 'data/A_letter.csv', input_traj );
+csvwrite( 'data/A_letter.csv', input_traj );
