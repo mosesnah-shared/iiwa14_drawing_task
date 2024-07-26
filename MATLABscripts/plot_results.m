@@ -5,7 +5,7 @@ clear; close all; clc;
 fig_config( 'fontSize', 20, 'markerSize', 10 )
 
 % Get the data
-raw_data = parse_txt( 'data_plot/Kp600_letterA_0p5.txt',0 );
+raw_data = parse_txt( 'data_plot/Kp1200_letterA_1p0.txt',0 );
 
 % Set figure size and attach robot to simulation
 robot = iiwa14( 'high' );
@@ -22,12 +22,16 @@ for i = 1 : Nt
     tmp = robot.getForwardKinematics( q_arr( :, i ) );
     p_arr( :, i ) = tmp( 1:3, 4 );
 end
+
+idx_start = 60;
  
 f = figure( ); a = axes( 'parent', f );
-plot( a, p_arr( 2, : ), p_arr( 3, : ))
+plot( a, p_arr( 2, idx_start:end ), p_arr( 3, idx_start:end ), 'linewidth', 6 )
 hold on
-plot( a, p0_arr( 2, : ), p0_arr( 3, : ))
+plot( a, p0_arr( 2, idx_start:end ), p0_arr( 3, idx_start:end ), 'linestyle','--', 'color', 'k', 'linewidth', 4 )
 axis equal
-set( a, 'visible', 'off' )
+set( a, 'visible', 'off' , 'xlim', [-0.1, 0.3], 'ylim', [0.15, 0.55])
 
-saveas( gcf, 'images/Kp600_A_0p5.jpeg')
+rmse( p_arr, p0_arr, "all" )
+
+saveas( gcf, 'images/Kp1200_A_1p0.jpeg')
