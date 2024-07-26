@@ -293,8 +293,8 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Jr = Eigen::MatrixXd::Zero( 3, myLBR->nq );
 
     // The stiffness/damping matrices
-    Kp = 600 * Eigen::MatrixXd::Identity( 3, 3 );
-    Bp =  60 * Eigen::MatrixXd::Identity( 3, 3 );
+    Kp = 300 * Eigen::MatrixXd::Identity( 3, 3 );
+    Bp =  30 * Eigen::MatrixXd::Identity( 3, 3 );
 
     Kr =  10 * Eigen::MatrixXd::Identity( 3, 3 );
     Br =   5 * Eigen::MatrixXd::Identity( 3, 3 );
@@ -303,7 +303,7 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Bq = 4.5 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
 
     // Open a file
-    f.open( "letterA_1p0.txt" );
+    f.open( "Kp300_letterA_1p0.txt" );
     fmt = Eigen::IOFormat(5, 0, ", ", "\n", "[", "]");
 
     // Read the Data
