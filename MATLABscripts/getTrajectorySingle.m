@@ -10,8 +10,8 @@ fig_config( 'fontSize', 20, 'markerSize', 10 )
 tmp = load( 'A.mat' ); mov = tmp.data;
 
 % The total time of the trajectory and its time array
-T     = 16.0;
-dt    = 1e-3;  
+T     = 6.0;
+dt    = 0.0033;  
 t_arr = 0:dt:T;  
 Nt    = length( t_arr );
 
@@ -79,11 +79,11 @@ plot3( anim.hAxes, input_traj( 1, : )+p_init( 1 ), input_traj( 2, : )+p_init( 2 
 ns = 1;
 
 % Task-space impedances for Position
-Kp = 400 * eye( 3 );
+Kp = 200 * eye( 3 );
 Bp = 0.1 * Kp;
 
 % Task-space impedances for Position
-Kr = 30 * eye( 3 );
+Kr = 2 * eye( 3 );
 
 % Joint-space impedance, damping
 Bq = .8 * eye( robot.nq );
@@ -134,4 +134,4 @@ anim.close( )
 
 %% Save Data
 
-csvwrite( 'data/A_letter.csv', input_traj );
+csvwrite( 'data_output/A_letter_1p0.csv', input_traj );

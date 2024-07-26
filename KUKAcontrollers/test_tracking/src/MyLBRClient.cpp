@@ -263,13 +263,18 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     dp_curr = Eigen::VectorXd::Zero( 3 );
 
     // Set the Rdesired postures
-    R_init_des << -1.0, 0.0,  0.0,
-                   0.0, 1.0,  0.0,
-                   0.0, 0.0, -1.0;
+    //    R_init_des << -1.0, 0.0,  0.0,
+    //                   0.0, 1.0,  0.0,
+    //                   0.0, 0.0, -1.0;
+
+    // Set the Rdesired postures
+    R_init_des << -0.3177, -0.2450,  0.9160,
+                   0.6259,  0.6715,  0.3967,
+                  -0.7123,  0.6993, -0.0599;
 
     Eigen::Vector3d wdel = so3_to_R3( SO3_to_so3( R_init.transpose( ) * R_init_des ) );
     mjt_w  = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ),  wdel, 3.0, 2.0 );
-    mjt_p  = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d( -0.2, 0.0, 0.0 ) , 3.0, 2.0 );
+    mjt_p  = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d( -0.05, -0.1, -0.2 ) , 3.0, 2.0 );
 
     // The taus (or torques) for the command
     tau_ctrl   = Eigen::VectorXd::Zero( myLBR->nq );    // The torque from the controller design,
@@ -291,18 +296,18 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Kp = 600 * Eigen::MatrixXd::Identity( 3, 3 );
     Bp =  60 * Eigen::MatrixXd::Identity( 3, 3 );
 
-    Kr =  70 * Eigen::MatrixXd::Identity( 3, 3 );
+    Kr =  10 * Eigen::MatrixXd::Identity( 3, 3 );
     Br =   5 * Eigen::MatrixXd::Identity( 3, 3 );
 
     Kq = 6.0 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
     Bq = 4.5 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
 
     // Open a file
-    f.open( "tracking_performance.txt" );
+    f.open( "letterA_1p0.txt" );
     fmt = Eigen::IOFormat(5, 0, ", ", "\n", "[", "]");
 
     // Read the Data
-    pos_data = readCSV( "/home/baxterplayground/Documents/iiwa14_drawing_task/data/A_letter.csv" );
+    pos_data = readCSV( "/home/baxterplayground/Documents/iiwa14_drawing_task/data_output/A_letter_1p0.csv" );
     std::cout << "Matrix size: " << pos_data.rows() << " rows x " << pos_data.cols() << " columns" << std::endl;
 
     N_data = pos_data.cols( );
@@ -502,7 +507,7 @@ void MyLBRClient::command()
             {
                 N_curr = N_data - 1;
             }
-            p0 += Eigen::Vector3d( p_tmp( 0 ), p_tmp( 1 ), 0 );
+            p0 += Eigen::Vector3d( 0, p_tmp( 1 ), p_tmp( 0 ) );
         }
     }
 
