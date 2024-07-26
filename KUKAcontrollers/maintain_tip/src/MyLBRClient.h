@@ -120,6 +120,7 @@ private:
     double t;
     double Tp;
     double t_osc;
+    double t_pressed;
 
     // The number of time steps for the simulation
     int n_step;
@@ -127,6 +128,7 @@ private:
     // Choose the body you want to control and the position on this body
     Eigen::Vector3d  p_curr;
     Eigen::Vector3d dp_curr;
+    MinimumJerkTrajectory *mjt_p;
     MinimumJerkTrajectory *mjt_w;
 
     MinimumJerkTrajectory *mjt_w1;
@@ -179,6 +181,13 @@ private:
 
     std::chrono::steady_clock::time_point start;
     std::chrono::steady_clock::time_point end;
+
+    // File for Saving the Data
+    std::ofstream f;
+    Eigen::IOFormat fmt;
+
+    bool is_pressed;
+
 };
 
 #endif // _KUKA_FRI_MY_LBR_CLIENT_H

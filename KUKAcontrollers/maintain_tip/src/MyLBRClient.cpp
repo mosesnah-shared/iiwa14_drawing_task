@@ -236,6 +236,7 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     t       = 0.0;     // The current Time
     ts      = 0.0;     // The  sample Time
     t_osc   = 0.0;     // The time to oscillate the movement
+    t_pressed = 0.0;
     n_step  = 0;       // The number of time steps, integer
 
     // Initialize joint torques and joint positions (also needed for waitForCommand()!)
@@ -250,7 +251,6 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
           q_command[ i ] = 0.0;
         tau_command[ i ] = 0.0;
     }
-
 
     // Forward Kinematics and the current position
     H = myLBR->getForwardKinematics( q, 7, offset );
@@ -269,6 +269,7 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
 
     Eigen::Vector3d wdel = so3_to_R3( SO3_to_so3( R_init.transpose( ) * R_init_des ) );
     mjt_w  = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ),  wdel, 4.0, 1.0 );
+    mjt_p  = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ),  Eigen::Vector3d( -0.3, 0.0, -0.1 ), 4.0, 1.0 );
 
     mjt_w1 = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d(  1.0, 0.0, 0.0 ), 2.0, 2.0 );
     mjt_w2 = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d( -2.0, 0.0, 0.0 ), 4.0, 3.5 );
@@ -291,8 +292,8 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Jr = Eigen::MatrixXd::Zero( 3, myLBR->nq );
 
     // The stiffness/damping matrices
-    Kp =  600 * Eigen::MatrixXd::Identity( 3, 3 );
-    Bp =   40 * Eigen::MatrixXd::Identity( 3, 3 );
+    Kp =  300 * Eigen::MatrixXd::Identity( 3, 3 );
+    Bp =   30 * Eigen::MatrixXd::Identity( 3, 3 );
 
     Kr = 70.0 * Eigen::MatrixXd::Identity( 3, 3 );
     Br =  5.0 * Eigen::MatrixXd::Identity( 3, 3 );
@@ -300,9 +301,15 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Kq =  0.0 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
     Bq =  4.5 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
 
+    // Open a file
+    f.open( "test1.txt" );
+    fmt = Eigen::IOFormat(5, 0, ", ", "\n", "[", "]");
+
     // The period of the oscillatory movement
     Tp = 3.0;
     assert( Tp >= 0.0 );
+
+    is_pressed = false;
 
     // Initial print
     printf( "Exp[licit](c)-cpp-FRI, https://explicit-robotics.github.io \n\n" );
@@ -317,6 +324,7 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
 */
 MyLBRClient::~MyLBRClient()
 {
+    f.close( );
 }
 
 /**
@@ -474,11 +482,13 @@ void MyLBRClient::command()
 
     R_des  = R_des * R3_to_SO3( mjt_w1->getPosition( t_osc ) + mjt_w2->getPosition( t_osc ) + mjt_w3->getPosition( t_osc ) );
 
+    p0 = p_init + mjt_p->getPosition( t );
+
     // The difference between the two rotation matrices
     R_del   = R_curr.transpose( ) * R_des;
     w_axis = so3_to_R3( SO3_to_so3( R_del ) );
 
-    tau_imp1 = Jp.transpose( ) * ( Kp * ( p_init - p_curr ) + Bp * ( - dp_curr ) );
+    tau_imp1 = Jp.transpose( ) * ( Kp * ( p0 - p_curr ) + Bp * ( - dp_curr ) );
     tau_imp2 = Kq * ( q0_init - q ) + Bq * ( -dq );
     tau_imp3 = Jr.transpose( ) * ( Kr * R_curr * w_axis - Br * Jr * dq );
 
@@ -505,6 +515,23 @@ void MyLBRClient::command()
         robotCommand( ).setTorque( tau_command );
     }
 
+    // If the counter reaches the threshold, print to console
+    if (  ( n_step % 5 ) == 0 )
+    {
+        f << "Time: " << std::fixed << std::setw( 5 ) << t;
+        f << " Joint Angle " << q.transpose( ).format( fmt );
+        f << " R des" << R_des.row( 0 ).format( fmt ) << R_des.row( 1 ).format( fmt ) << R_des.row( 2 ).format( fmt );
+
+        f << std::endl;
+
+        end = std::chrono::steady_clock::now( );
+
+        std::cout << "Elapsed time for The Torque Calculation "
+                  << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
+                  << " us" << std::endl;
+        n_step = 0;
+    }
+
     // IIR filter input
     iir( q_curr );
 
@@ -525,11 +552,28 @@ void MyLBRClient::command()
         t_osc = 0.0;
     }
 
+    // Check if button Pressed for the First Time
+    if( robotState().getBooleanIOValue( "MediaFlange.UserButton" ) && !is_pressed )
+    {
+        is_pressed = true;
+
+        // Turn on imitation learning
+        std::cout << "Button Pressed!" << std::endl;
+    }
+
     // Add the sample time to the current time
     t += ts;
-    t_osc += ts;
     n_step++;
 
+    if( is_pressed )
+    {
+        t_pressed += ts;
+    }
+
+    if( is_pressed && t_pressed >= 2 )
+    {
+        t_osc += ts;
+    }
 
 
 }
