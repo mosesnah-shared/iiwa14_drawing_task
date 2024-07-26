@@ -292,17 +292,17 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Jr = Eigen::MatrixXd::Zero( 3, myLBR->nq );
 
     // The stiffness/damping matrices
-    Kp =  300 * Eigen::MatrixXd::Identity( 3, 3 );
-    Bp =   30 * Eigen::MatrixXd::Identity( 3, 3 );
+    Kp =  600 * Eigen::MatrixXd::Identity( 3, 3 );
+    Bp =   60 * Eigen::MatrixXd::Identity( 3, 3 );
 
-    Kr = 70.0 * Eigen::MatrixXd::Identity( 3, 3 );
-    Br =  5.0 * Eigen::MatrixXd::Identity( 3, 3 );
+    Kr = 100.0 * Eigen::MatrixXd::Identity( 3, 3 );
+    Br =  10.0 * Eigen::MatrixXd::Identity( 3, 3 );
 
     Kq =  0.0 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
     Bq =  4.5 * Eigen::MatrixXd::Identity( myLBR->nq, myLBR->nq );
 
     // Open a file
-    f.open( "test1.txt" );
+    f.open( "Kp600_Kr100.txt" );
     fmt = Eigen::IOFormat(5, 0, ", ", "\n", "[", "]");
 
     // The period of the oscillatory movement
@@ -516,7 +516,7 @@ void MyLBRClient::command()
     }
 
     // If the counter reaches the threshold, print to console
-    if (  ( n_step % 5 ) == 0 )
+    if (  ( n_step % 5 ) == 0 && is_pressed )
     {
         f << "Time: " << std::fixed << std::setw( 5 ) << t;
         f << " Joint Angle " << q.transpose( ).format( fmt );
