@@ -29,7 +29,7 @@ Nt    = length( t_arr );
 time_scl = [ 2.0, 2.0, 1.6 ];
 
 % Scaling amplitude 
-size_scl = [ 1.0, 1.0, 0.7 ];
+size_scl = [ 1.0, 1.0, 0.6 ];
 
 % Time offset of each movement
 toffset  = [ 2.0, 14.0, 0.0 ];
@@ -83,7 +83,7 @@ offsets = { [ 0.0; 0.0 ], [ 0.16; 0.18 ], [ 0.0; 0.0 ] };
 scl_trajs = 0.07*[ 0.3, 0.23, 0.2 ];
 
 % Rotation of the movement
-rot_amp  = [ 0.0, 0.0, 0.0]*pi/180.0;
+rot_amp  = [ 0.0, 0.0, 90.0]*pi/180.0;
 
 % Rotation Function
 my_rot = @( ang ) [ cos( ang ), -sin( ang ); sin( ang ), cos( ang ) ];

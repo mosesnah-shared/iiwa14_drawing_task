@@ -20,19 +20,19 @@ Nmov      = length( movements );
 trajectories = cell( 1, Nmov );
 
 % The total time of the trajectory and its time array
-T     = 30.0;
+T     = 40.0;
 dt    = 0.0033;  
 t_arr = 0:dt:T;  
 Nt    = length( t_arr );
 
 % Time amplitude of each movement 
-time_scl = [ 2.0, 2.0, 0.7 ];
+time_scl = [ 2.5, 3.0, 0.7 ];
 
 % Scaling amplitude 
 size_scl = [ 1.0, 1.0, 0.7 ];
 
 % Time offset of each movement
-toffset  = [ 2.0, 14.0, 0.0 ];
+toffset  = [ 2.0, 17.0, 0.0 ];
 
 % Generate the trajectories via Iteration
 for i = 1 : Nmov
