@@ -280,7 +280,7 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     mjt_p1_init = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d( -0.38, -0.3,  0.00 ), 2.0, 2.0 );
     mjt_p2_init = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d(  0.00,  0.0, -0.53 ), 3.0, 3.0 );
     mjt_p3_init = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d(  0.00,  0.0,  0.24 ), 3.0, 2.0 );
-    mjt_p4_init = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d(  0.00,  0.0, -0.23 ), 3.0, 2.0 );
+    mjt_p4_init = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d(  0.00,  0.0, -0.24 ), 3.0, 2.0 );
     mjt_p5_init = new MinimumJerkTrajectory( 3, Eigen::Vector3d( 0.0, 0.0, 0.0 ), Eigen::Vector3d(  0.00,  0.0,  0.53 ), 3.0, 2.0 );
 
     // The taus (or torques) for the command
@@ -540,7 +540,10 @@ void MyLBRClient::command()
         // Conduct the Forward Movement
         if( t_2nd_pressed >= 6.0 )
         {
-            N_curr_backward--;
+            if( n_step % 2 == 0 )
+            {
+                N_curr_backward--;
+            }
 
             if( N_curr_backward <= 0 )
             {
@@ -559,7 +562,10 @@ void MyLBRClient::command()
     if( is_backward_done && !is_backward2_done )
     {
         // Conduct the Forward Movement
-        N_curr_backward2++;
+        if( n_step % 2 == 0 )
+        {
+            N_curr_backward2++;
+        }
 
         if( N_curr_backward2 >= N_data_backward2 )
         {
