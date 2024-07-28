@@ -117,7 +117,11 @@ private:
     double ts;
     double t;
     double amp;
-    double t_pressed;
+    double t_1st_pressed;
+    double t_2nd_pressed;
+    double t_forward_done;    // Time since   forward done
+    double t_backward_done;   // Time since  backward done
+    double t_backward2_done;  // Time since backward2 done
 
     // The number of time steps for the simulation
     int n_step;
@@ -125,14 +129,18 @@ private:
     // Choose the body you want to control and the position on this body
     Eigen::Vector3d  p_curr;
     Eigen::Vector3d dp_curr;
-    MinimumJerkTrajectory *mjt_w;
-    MinimumJerkTrajectory *mjt_p;
+    MinimumJerkTrajectory *mjt_w_init;
+    MinimumJerkTrajectory *mjt_p1_init;
+    MinimumJerkTrajectory *mjt_p2_init;
+
+    MinimumJerkTrajectory *mjt_p3_init;
+    MinimumJerkTrajectory *mjt_p4_init;
+    MinimumJerkTrajectory *mjt_p5_init;
 
     // The virtual task-space trajectory, position.
     Eigen::Vector3d p0;
-    Eigen::Vector3d p0_osc;
     Eigen::Vector3d dp0;
-    Eigen::Vector3d w01;
+    Eigen::Vector3d w0_init;
 
     // Current position and velocity as Eigen vector
     Eigen::VectorXd q;
@@ -169,23 +177,31 @@ private:
     Eigen::Vector3d w_axis;
     Eigen::Vector3d wdel;
 
-    bool is_pressed;
+    bool is_1st_pressed;
+    bool is_2nd_pressed;
+    bool is_forward_done;
+    bool is_backward_done;
+    bool is_backward2_done;
 
-    std::chrono::steady_clock::time_point start;
-    std::chrono::steady_clock::time_point end;
+    // Read the data, Forward Movement
+    Eigen::MatrixXd pos_data_forward;
+    int N_data_forward;
+    int N_curr_forward;
+
+    Eigen::MatrixXd pos_data_backward;
+    int N_data_backward;
+    int N_curr_backward;
+
+    Eigen::MatrixXd pos_data_backward2;
+    int N_data_backward2;
+    int N_curr_backward2;
 
     // File for Saving the Data
-    std::ofstream f;
+    std::ofstream fw;
+    std::ofstream fb;
+    std::ofstream fb2;
     Eigen::IOFormat fmt;
 
-    // Data read
-    Eigen::MatrixXd pos_data;
-    Eigen::Vector3d pos_data_end;
-    Eigen::Vector2d p_tmp;
-    MinimumJerkTrajectory *mjt_p_back;
-
-    int N_data;
-    int N_curr;
 };
 
 #endif // _KUKA_FRI_MY_LBR_CLIENT_H

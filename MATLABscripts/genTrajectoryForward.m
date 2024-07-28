@@ -9,30 +9,29 @@ fig_config( 'fontSize', 20, 'markerSize', 10 )
 % Load the kinematic modules
 tmp1 = load( 'A.mat'     ); mov_dis1 = tmp1.data;
 tmp2 = load( 'B.mat'     ); mov_dis2 = tmp2.data;
-tmp3 = load( 'eight.mat' ); mov_rhy1 = tmp3.data;
 
 % The number of movements and the movement types
-movements = {   mov_dis1,   mov_dis2,  mov_rhy1  };
-types     = { 'discrete', 'discrete', 'rhythmic' };
+movements = {   mov_dis1,   mov_dis2 };
+types     = { 'discrete', 'discrete' };
 Nmov      = length( movements );
 
 % Generate the trajectories
 trajectories = cell( 1, Nmov );
 
 % The total time of the trajectory and its time array
-T     = 16.0;
-dt    = 1e-3;  
+T     = 18.0;
+dt    = 0.0033;  
 t_arr = 0:dt:T;  
 Nt    = length( t_arr );
 
 % Time amplitude of each movement 
-time_scl = [ 0.5, 2.0, 1.0 ];
+time_scl = [ 1.5, 1.5 ];
 
 % Scaling amplitude 
-size_scl = [ 1.0, 1.0, 1.0 ];
+size_scl = [ 1.0, 1.0 ];
 
 % Time offset of each movement
-toffset  = [ 0.0, 3.0, 0.0 ];
+toffset  = [ 0.0, 9.0 ];
 
 % Generate the trajectories via Iteration
 for i = 1 : Nmov
@@ -77,13 +76,13 @@ clear tmp* mov_*
 %% Combine the movements
 
 % Define the offsets of the movement
-offsets = { [ 0.0; 0.0 ], [ 0.25; 0.25 ], [ 0.0; 0.0 ] };
+offsets = { [ 0.0; 0.0 ], [ 0.16; 0.18 ] };
 
 % Again, Scale the output
-scl_trajs = 0.09*[ 0.3, 0.2, 0.2 ];
+scl_trajs = 0.07*[ 0.3, 0.23 ];
 
 % Rotation of the movement
-rot_amp  = [ 0.0, -30.0, 0.0]*pi/180.0;
+rot_amp  = [ 0.0, 0.0]*pi/180.0;
 
 % Rotation Function
 my_rot = @( ang ) [ cos( ang ), -sin( ang ); sin( ang ), cos( ang ) ];
@@ -92,19 +91,14 @@ my_rot = @( ang ) [ cos( ang ), -sin( ang ); sin( ang ), cos( ang ) ];
 time_off = toffset( 2 );
 idx1 = round( time_off/dt );
 
-% Set the activation function
-trajectories{ 2 } = circshift( trajectories{ 2 }, 1000 );
-
 % Define the activation functions for each movements
 idx_off = 200;
 act_func_dis1 = smth_activation( Nt, 1.0, 0.0, idx1-idx_off, idx1+idx_off  );
 act_func_dis2 = smth_activation( Nt, 0.0, 1.0, idx1-idx_off, idx1+idx_off  );
-act_func_rhy1 = smth_activation( Nt, 0.0, 1.0, idx1-idx_off, idx1+idx_off);
 
 % The combined_trajectory
 combined_traj = ( offsets{ 1 } + my_rot( rot_amp( 1 ) ) * scl_trajs( 1 ) * trajectories{ 1 } ) .* act_func_dis1 + ...
-                ( offsets{ 2 } + my_rot( rot_amp( 2 ) ) * scl_trajs( 2 ) * trajectories{ 2 } ) .* act_func_dis2 + ...
-                ( offsets{ 3 } + my_rot( rot_amp( 3 ) ) * scl_trajs( 3 ) * trajectories{ 3 } ) .* act_func_rhy1;
+                ( offsets{ 2 } + my_rot( rot_amp( 2 ) ) * scl_trajs( 2 ) * trajectories{ 2 } ) .* act_func_dis2;
 
 f = figure( ); a = axes( 'parent', f );
 plot( a, combined_traj( 1, : ), combined_traj( 2, : ), 'linewidth', 3 )
@@ -201,3 +195,5 @@ anim.close( )
 
 %% If all good, then save it as data
 
+% Data_mov Forward
+csvwrite( 'data_output/AB_write_forward.csv', input_traj )
