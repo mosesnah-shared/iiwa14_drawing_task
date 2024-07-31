@@ -1,9 +1,6 @@
 [submodule "Explicit-MATLAB"]
 	path = Explicit-MATLAB
 	url = https://github.com/explicit-robotics/Explicit-MATLAB.git
-[submodule "Explicit-FRI"]
-	path = Explicit-FRI
-	url = https://github.com/explicit-robotics/Explicit-FRI.git
 [submodule "KinematicModules"]
 	path = KinematicModules
 	url = https://github.com/mosesnah-shared/KinematicModules.git
