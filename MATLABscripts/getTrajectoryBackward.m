@@ -9,7 +9,7 @@ fig_config( 'fontSize', 20, 'markerSize', 10 )
 % Load the kinematic modules
 tmp1 = load( 'A.mat'     ); mov_dis1 = tmp1.data;
 tmp2 = load( 'B.mat'     ); mov_dis2 = tmp2.data;
-tmp3 = load( 'eight.mat' ); mov_rhy1 = tmp3.data;
+tmp3 = load( 'two_circles.mat' ); mov_rhy1 = tmp3.data;
 
 % The number of movements and the movement types
 movements = {   mov_dis1,   mov_dis2,  mov_rhy1  };
@@ -26,10 +26,10 @@ t_arr = 0:dt:T;
 Nt    = length( t_arr );
 
 % Time amplitude of each movement 
-time_scl = [ 2.0, 2.0, 1.6 ];
+time_scl = [ 2.0, 2.0, 2.0 ];
 
 % Scaling amplitude 
-size_scl = [ 1.0, 1.0, 0.6 ];
+size_scl = [ 1.1, 1.1, 1.0 ];
 
 % Time offset of each movement
 toffset  = [ 2.0, 14.0, 0.0 ];

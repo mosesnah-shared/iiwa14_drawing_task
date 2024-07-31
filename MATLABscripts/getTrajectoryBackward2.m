@@ -9,7 +9,7 @@ fig_config( 'fontSize', 20, 'markerSize', 10 )
 % Load the kinematic modules
 tmp1 = load( 'A.mat'     ); mov_dis1 = tmp1.data;
 tmp2 = load( 'B.mat'     ); mov_dis2 = tmp2.data;
-tmp3 = load( 'eight.mat' ); mov_rhy1 = tmp3.data;
+tmp3 = load( 'two_circles.mat' ); mov_rhy1 = tmp3.data;
 
 % The number of movements and the movement types
 movements = {   mov_dis1,   mov_dis2,  mov_rhy1  };
@@ -26,13 +26,13 @@ t_arr = 0:dt:T;
 Nt    = length( t_arr );
 
 % Time amplitude of each movement 
-time_scl = [ 2.5, 3.0, 0.7 ];
+time_scl = [ 3.0, 3.0, 1.0 ];
 
 % Scaling amplitude 
-size_scl = [ 1.0, 1.0, 0.7 ];
+size_scl = [ 1.2, 1.5, 0.7 ];
 
 % Time offset of each movement
-toffset  = [ 2.0, 17.0, 0.0 ];
+toffset  = [ 2.0, 19.0, 0.0 ];
 
 % Generate the trajectories via Iteration
 for i = 1 : Nmov
@@ -84,7 +84,7 @@ clear tmp* mov_*
 offsets = { [ 0.0; 0.0 ], [ 0.16; 0.18 ], [ 0.0; 0.0 ] };
 
 % Again, Scale the output
-scl_trajs = 0.07*[ 0.3, 0.23, 0.2 ];
+scl_trajs = 0.07*[ 0.3, 0.26, 0.2 ];
 
 % Rotation of the movement
 rot_amp  = [ 0.0, 0.0, 0.0]*pi/180.0;

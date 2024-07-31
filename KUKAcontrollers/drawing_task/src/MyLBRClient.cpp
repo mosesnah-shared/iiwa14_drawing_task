@@ -303,7 +303,7 @@ MyLBRClient::MyLBRClient(double freqHz, double amplitude)
     Kp = 400 * Eigen::MatrixXd::Identity( 3, 3 );
     Bp =  40 * Eigen::MatrixXd::Identity( 3, 3 );
 
-    Kp( 2, 2 ) = 800;
+    Kp( 2, 2 ) = 500;
 
     Kr =  70 * Eigen::MatrixXd::Identity( 3, 3 );
     Br =   7 * Eigen::MatrixXd::Identity( 3, 3 );
@@ -644,7 +644,7 @@ void MyLBRClient::command()
 
         // Turn on imitation learning
         std::cout << "2nd Button Pressed!" << std::endl;
-        Kp( 2, 2 ) = 400;
+        Kp( 2, 2 ) = 600;
     }
 
     // If the counter reaches the threshold, print to console
