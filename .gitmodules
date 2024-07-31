@@ -7,3 +7,6 @@
 [submodule "GeometryLibrary"]
 	path = GeometryLibrary
 	url = https://github.com/mosesnah-shared/GeometryLibrary.git
+[submodule "Explicit-FRI"]
+	path = Explicit-FRI
+	url = https://github.com/explicit-robotics/Explicit-FRI.git
